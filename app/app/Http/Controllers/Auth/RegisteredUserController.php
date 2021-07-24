@@ -10,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Validation\Rules;
+use App\Models\TemporaryFile;
 
 class RegisteredUserController extends Controller
 {
@@ -44,6 +45,15 @@ class RegisteredUserController extends Controller
             'email' => $request->email,
             'password' => Hash::make($request->password),
         ]);
+
+         $temporaryFile = TemporaryFile::where('folder', $request->avatar)->first();
+
+         if($temporaryFile){
+             $user->addMedia(storage_path('app\avatars\tmp\\' . $request->avatar. '\\' . $temporaryFile->filename))
+                 ->toMediaCollection('avatars');
+             rmdir(storage_path('app\avatars\tmp\\' . $request->avatar));
+             $temporaryFile->delete();
+         }
 
         event(new Registered($user));
 

@@ -45,13 +45,12 @@
                                 name="password_confirmation" required />
             </div>
 
-            <!-- User profile image -->
             <div class="mt-4">
                 <x-label for="avatar" :value="__('Avatar')" />
 
                 <input id="avatar" class="block mt-1 w-full"
-                         type="file"
-                         name="avatar" />
+                       type="file"
+                       name="avatar" />
             </div>
 
             <div class="flex items-center justify-end mt-4">
@@ -67,10 +66,22 @@
     </x-auth-card>
     @section('scripts')
         <script>
-            const inputElement = document.querySelector('input[id="avatar"]');
-            const pond = FilePond.create(inputElement);
-            FilePond.setOptions({
-                server: '/upload',
+            document.addEventListener('DOMContentLoaded', function() {
+                const inputElement = document.querySelector('input[id="avatar"]');
+                const pond = FilePond.create(inputElement);
+                FilePond.setOptions({
+                    server: {
+                        headers: {
+                            'X-CSRF-TOKEN': '{{ csrf_token() }}'
+                        },
+                        process: {
+                            url: '{{ route('filepond.store') }}',
+                        },
+                        revert: {
+                            url: '{{ route('filepond.delete') }}',
+                        }
+                    }
+                });
             });
         </script>
     @endsection

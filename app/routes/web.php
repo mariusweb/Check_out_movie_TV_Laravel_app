@@ -1,7 +1,8 @@
 <?php
 
 use Illuminate\Support\Facades\Route;
-
+use App\Http\Controllers\UploadController;
+use App\Http\Controllers\ProfileController;
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -17,12 +18,14 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::group(['middleware' => 'auth'], function () {
+Route::post('upload/upload', [UploadController::class, 'store'])->name('filepond.store');
+Route::delete('upload/delete', [UploadController::class, 'delete'])->name('filepond.delete');
+
+Route::group(['middleware' => 'auth'], function (){
     Route::get('/dashboard', function () {
         return view('dashboard');
     })->name('dashboard');
-
-    Route::view('profile', 'profile')->name('profile');
+    Route::resource('profile', ProfileController::class);
 });
 
-require __DIR__ . '/auth.php';
+require __DIR__.'/auth.php';
