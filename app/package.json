@@ -30,6 +30,7 @@
         "tailwindcss": "^2.0.2"
     },
     "dependencies": {
+        "@fortawesome/fontawesome-free": "^5.15.3",
         "filepond": "^4.28.2"
     }
 }

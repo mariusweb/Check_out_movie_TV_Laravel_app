@@ -2,10 +2,21 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\UpdateUserRequest;
+use App\Managers\ProfilesManager;
+use App\Models\TemporaryFile;
+use App\Models\User;
 use Illuminate\Http\Request;
 
 class ProfileController extends Controller
 {
+    /**
+     * ProfileController constructor.
+     */
+    public function __construct(private ProfilesManager $profilesManager)
+    {
+    }
+
     /**
      * Display a listing of the resource.
      *
@@ -13,7 +24,8 @@ class ProfileController extends Controller
      */
     public function index()
     {
-        return view('profile');
+        $userAvatar = $this->profilesManager->getUsersAvatar();
+        return view('profile', ['avatar' => $userAvatar]);
     }
 
     /**
@@ -56,7 +68,8 @@ class ProfileController extends Controller
      */
     public function edit($id)
     {
-        //
+        $userAvatar = $this->profilesManager->getUsersAvatar();
+        return view('edit-profile', ['avatar' => $userAvatar]);
     }
 
     /**
@@ -66,9 +79,11 @@ class ProfileController extends Controller
      * @param  int  $id
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, $id)
+    public function update(UpdateUserRequest $request, $id)
     {
-        //
+        $this->profilesManager->updateUser($request);
+        $userAvatar = $this->profilesManager->getUsersAvatar();
+        return view('profile', ['avatar' => $userAvatar]);
     }
 
     /**

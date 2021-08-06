@@ -53,8 +53,12 @@ class RegisteredUserController extends Controller
                  ->toMediaCollection('avatars');
              rmdir(storage_path('app\avatars\tmp\\' . $request->avatar));
              $temporaryFile->delete();
+         }else{
+             $user->addMedia(storage_path('app\public\default\default.png'))
+                 ->preservingOriginal()
+                 ->toMediaCollection('avatars');
          }
-
+        $user->follow($user);
         event(new Registered($user));
 
         Auth::login($user);

@@ -183,6 +183,9 @@
       <path value="$PROJECT_DIR$/app/vendor/myclabs/php-enum" />
       <path value="$PROJECT_DIR$/app/vendor/league/glide" />
       <path value="$PROJECT_DIR$/app/vendor/laravel/ui" />
+      <path value="$PROJECT_DIR$/app/vendor/symfony/test-pack" />
+      <path value="$PROJECT_DIR$/app/vendor/overtrue/laravel-like" />
+      <path value="$PROJECT_DIR$/app/vendor/hypefactors/laravel-follow" />
     </include_path>
   </component>
   <component name="PhpProjectSharedConfiguration" php_language_level="8.0" />

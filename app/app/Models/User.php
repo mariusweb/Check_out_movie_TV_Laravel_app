@@ -9,10 +9,15 @@ use Illuminate\Notifications\Notifiable;
 use Spatie\MediaLibrary\HasMedia\HasMediaTrait;
 use Spatie\MediaLibrary\HasMedia;
 use Spatie\MediaLibrary\InteractsWithMedia;
+use Overtrue\LaravelLike\Traits\Liker;
+use Hypefactors\Laravel\Follow\Traits\CanFollow;
+use Hypefactors\Laravel\Follow\Contracts\CanFollowContract;
+use Hypefactors\Laravel\Follow\Traits\CanBeFollowed;
+use Hypefactors\Laravel\Follow\Contracts\CanBeFollowedContract;
 
-class User extends Authenticatable implements HasMedia
+class User extends Authenticatable implements HasMedia, CanFollowContract, CanBeFollowedContract
 {
-    use HasFactory, Notifiable, InteractsWithMedia;
+    use HasFactory, Notifiable, InteractsWithMedia, Liker, CanFollow, CanBeFollowed;
 
     /**
      * The attributes that are mass assignable.
@@ -23,7 +28,6 @@ class User extends Authenticatable implements HasMedia
         'name',
         'email',
         'password',
-        'avatar',
     ];
 
     /**

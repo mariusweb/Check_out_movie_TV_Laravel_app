@@ -16,7 +16,7 @@
 
     </head>
     <body class="font-sans antialiased">
-        <div class="min-h-screen bg-gray-100">
+        <div class="min-h-screen">
             @include('layouts.navigation')
 
             <!-- Page Heading -->
@@ -32,6 +32,25 @@
             </main>
         </div>
         <!-- Scripts -->
+        <footer class="py-5 bg-dark">
+            <div class="container">
+                <div class="d-flex justify-content-between">
+                    <p class="m-0 text-center text-white">Copyright &copy; Your Website 2021</p>
+                    <div class="d-flex">
+                        <p class="m-0 text-center text-white">Movies and TV-shows are from </p>
+                        <a class="w-25 d-flex align-content-center pl-1" href="https://www.themoviedb.org/">
+                            <img class="w-100" src="https://www.themoviedb.org/assets/2/v4/logos/v2/blue_long_1-8ba2ac31f354005783fab473602c34c3f4fd207150182061e425d366e4f34596.svg" alt="THE MOVIE DB" />
+                        </a>
+
+                    </div>
+                </div>
+
+
+            </div>
+        </footer>
+
         <script src="{{ asset('js/app.js') }}" defer></script>
+        <script src="{{ asset('js/bootstrap.js') }}" defer></script>
+        @yield('scripts')
     </body>
 </html>

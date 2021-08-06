@@ -183,6 +183,9 @@
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/myclabs/php-enum" />
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/league/glide" />
       <excludeFolder url="file://$MODULE_DIR$/app/vendor/laravel/ui" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/symfony/test-pack" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/overtrue/laravel-like" />
+      <excludeFolder url="file://$MODULE_DIR$/app/vendor/hypefactors/laravel-follow" />
     </content>
     <orderEntry type="inheritedJdk" />
     <orderEntry type="sourceFolder" forTests="false" />

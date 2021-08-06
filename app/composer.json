@@ -9,10 +9,12 @@
         "fideloper/proxy": "^4.4",
         "fruitcake/laravel-cors": "^2.0",
         "guzzlehttp/guzzle": "^7.0.1",
+        "hypefactors/laravel-follow": "7.0",
         "laravel/framework": "^8.40",
         "laravel/tinker": "^2.5",
-        "laravel/ui": "^3.3",
-        "spatie/laravel-medialibrary": "^9.0.0"
+        "laravel/ui": "3.3",
+        "overtrue/laravel-like": "4.0",
+        "spatie/laravel-medialibrary": "9.0.0"
     },
     "require-dev": {
         "facade/ignition": "^2.5",
@@ -21,7 +23,8 @@
         "laravel/sail": "^1.0.1",
         "mockery/mockery": "^1.4.2",
         "nunomaduro/collision": "^5.0",
-        "phpunit/phpunit": "^9.3.3"
+        "phpunit/phpunit": "^9.5",
+        "symfony/test-pack": "^1.0"
     },
     "autoload": {
         "psr-4": {
