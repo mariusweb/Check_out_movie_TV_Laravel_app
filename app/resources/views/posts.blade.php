@@ -43,24 +43,24 @@
                     </div>
                     <div class="row">
                     <div class="timeline-content col col-xl-6 col-lg-8 col-md-12 col-sm-12 ">
+                        <p class="lead">
+                            {{$post['post_text']}}
+                        </p>
                         <div class="d-flex flex-column align-items-center">
+                            <div class="post-stars mb-2">
+                                @for($i = 0; $i < $post['rating']; $i++)
+                                    <i class="post__star fa fa-star fa-3x"></i>
+                                @endfor
+                            </div>
                             <div class="card mb-2" >
                                 <img src="https://image.tmdb.org/t/p/w500{{ $post['movie_data']['poster_path'] }}" class="card-img-top" alt="{{ $post['movie_data']['original_title'] }}">
                                 <div class="card-body">
                                     <h5 class="card-title h5"><strong>{{ $post['movie_data']['original_title'] }}</strong></h5>
                                 </div>
                             </div>
-                            <div class="post-stars mb-2">
-                                @for($i = 0; $i < $post['rating']; $i++)
-                                    <i class="post__star fa fa-star fa-3x"></i>
-                                @endfor
-                            </div>
+
                         </div>
 
-
-                        <p class="lead">
-                            {{$post['post_text']}}
-                        </p>
                     </div>
                     </div>
                     <div class="timeline-likes">
@@ -73,23 +73,29 @@
                   <i class="fa fa-circle fa-stack-2x text-primary"></i>
                   <i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i>
                   </span>
-                            <span class="stats-total">4.3k</span>
+                            <span class="stats-total">{{ $post['likes'] }}</span>
                         </div>
                     </div>
                     <div class="timeline-footer">
-                        <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-thumbs-up fa-fw fa-lg m-r-3"></i> Like</a>
-                        <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-comments fa-fw fa-lg m-r-3"></i> Comments</a>
+                        <a href="{{ route('posts.edit', $post['id']) }}" class="m-r-15 text-inverse-lighter">
+                            @if($post['liked'] === false)
+                                <i class="fa fa-thumbs-up fa-fw fa-lg m-r-3"></i> Like
+                            @elseif($post['liked'] === true)
+                                <i class="fa fa-thumbs-down fa-fw fa-lg m-r-3" ></i> Dislike
+                            @endif
+                        </a>
+                        <a href="{{ route('comments.index') }}" class="m-r-15 text-inverse-lighter"><i class="fa fa-comments fa-fw fa-lg m-r-3"></i> Comments</a>
 
                     </div>
                     <div class="timeline-comment-box">
                         <div class="user"><img src="{{ asset('/storage/' . $users[auth()->user()->id]['folder_id'] . '/' . $users[auth()->user()->id]['file_name']) }}"></div>
                         <div class="input">
-                            <form action="">
+                            <form action="{{ route('comments.store') }}">
                                 <div class="input-group">
                                     <input type="text" class="form-control rounded-corner" placeholder="Write a comment...">
                                     <span class="input-group-btn p-l-10">
-                        <button class="btn btn-primary f-s-12 rounded-corner" type="button">Comment</button>
-                        </span>
+                                        <button class="btn btn-primary f-s-12 rounded-corner" type="submit">Comment</button>
+                                    </span>
                                 </div>
                             </form>
                         </div>

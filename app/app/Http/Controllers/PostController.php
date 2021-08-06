@@ -20,26 +20,35 @@ class PostController extends Controller
         $userFollowings = auth()->user()->followings;
         $usersPosts = [];
         $usersWithAvatar = [];
+
         foreach ($userFollowings as $follower) {
-            $post = Post::select('user_id', 'movie_id', 'rating', 'post_text', 'updated_at')
-                ->where('user_id', $follower->followable_id)
+
+            $posts = Post::where('user_id', $follower->followable_id)
                 ->get();
-            $post = $post->toArray();
+
+            foreach ($posts as $key => $post){
+                $liked = auth()->user()->hasLiked($post);
+                $postLikes = $post->likers()->count();
+                $posts[$key]['likes'] = $postLikes;
+                $posts[$key]['liked'] = $liked;
+            }
+
+            $posts = $posts->toArray();
+            $usersPosts = array_merge($usersPosts, $posts);
 
             $user = User::find($follower->followable_id);
-
             $user->getMedia();
             $user = $user->toArray();
+
             foreach($user['media'] as $userMedia){
                 $user['file_name'] = $userMedia['file_name'];
                 $user['folder_id'] = $userMedia['id'];
             }
-
-            $usersPosts = array_merge($usersPosts, $post);
             $usersWithAvatar[$follower->followable_id] =  $user;
-        }
 
+        }
         $usersPosts = collect($usersPosts)->sortByDesc('updated_at')->all();
+
         foreach ($usersPosts as $key => $userPost){
             $movie = Http::withToken(config('services.tmdb.token'))
                 ->get('https://api.themoviedb.org/3/movie/' . $userPost['movie_id'] . '?language=en-US')
@@ -102,7 +111,8 @@ class PostController extends Controller
      */
     public function edit(Post $post)
     {
-        //
+        auth()->user()->toggleLike($post);
+        return redirect()->route('posts.index');
     }
 
     /**
