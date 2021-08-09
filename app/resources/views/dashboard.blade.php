@@ -2,11 +2,15 @@
     <x-slot name="header">
         <div class="d-flex justify-content-between">
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-                {{ __('Movies and TV-shows') }}
+                @if(isset($search))
+                    {{ __('Movies from '. $search) }}
+                @else
+                    {{ __('Movies') }}
+                @endif
             </h2>
-            <form method="GET" action="">
+            <form method="GET" action="{{ route('movies.search') }}">
                 <div class="input-group rounded">
-                    <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+                    <input type="text" class="form-control rounded" name="search" placeholder="Search for movies" aria-label="Search"
                            aria-describedby="search-addon"/>
                     <button type="submit" class="input-group-text border-0 bg-white" id="search-addon">
                         <i class="fas fa-search" aria-hidden="true"></i>
@@ -274,35 +278,6 @@
 
                 @endforeach
 
-                <div class="col mb-5">
-                    <div class="card h-100">
-                        <!-- Sale badge-->
-                        <div class="badge bg-dark text-white position-absolute" style="top: 0.5rem; right: 0.5rem">
-                            Sale
-                        </div>
-                        <!-- Product image-->
-                        <img class="card-img-top" src="https://dummyimage.com/450x300/dee2e6/6c757d.jpg" alt="..."/>
-                        <!-- Product details-->
-                        <div class="card-body p-4">
-                            <div class="text-center">
-                                <!-- Product name-->
-                                <h5 class="fw-bolder">Special Item</h5>
-                                <!-- Product reviews-->
-                                <div class="d-flex justify-content-center small text-warning mb-2">
-
-                                </div>
-                                <!-- Product price-->
-                                <span class="text-muted text-decoration-line-through">$20.00</span>
-                                $18.00
-                            </div>
-                        </div>
-                        <!-- Product actions-->
-                        <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="#">Add to cart</a>
-                            </div>
-                        </div>
-                    </div>
-                </div>
 
             </div>
         </div>

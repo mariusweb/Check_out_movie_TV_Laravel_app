@@ -27,11 +27,17 @@ Route::delete('upload/delete', [UploadController::class, 'delete'])->name('filep
 
 Route::group(['middleware' => 'auth'], function (){
     Route::get('/dashboard', [MovieController::class, 'index'])->name('dashboard');
-    Route::resource('profile', ProfileController::class);
-    Route::resource('movies', MovieController::class);
-    Route::resource('posts', PostController::class)->except(['store']);
+    Route::resource('profile', ProfileController::class)->except(['search']);
+    Route::resource('movies', MovieController::class)->except(['search']);
+    Route::resource('posts', PostController::class)->except(['store', 'search']);
     Route::post('posts/{id?}', [PostController::class, 'store'])->name('posts.store');
-    Route::resource('comments', CommentController::class);
+    Route::resource('comments', CommentController::class)->except(['store']);
+    Route::post('comments/{id?}', [CommentController::class, 'store'])->name('comments.store');
+    Route::get('follow/{id?}',[ProfileController::class, 'follow'] )->name('profile.follow');
+    Route::get('unfollow/{id?}',[ProfileController::class, 'unfollow'] )->name('profile.unfollow');
+    Route::get('search/movies',[MovieController::class, 'search'] )->name('movies.search');
+    Route::get('search/posts',[PostController::class, 'search'] )->name('posts.search');
+    Route::get('search/people',[ProfileController::class, 'search'] )->name('profile.search');
 });
 
 require __DIR__.'/auth.php';

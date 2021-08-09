@@ -1,8 +1,28 @@
 <x-app-layout>
     <x-slot name="header">
-        <h2 class="font-semibold text-xl text-gray-800 leading-tight">
-            {{ __('My Profile') }}
-        </h2>
+        <div class="d-flex justify-content-between">
+            <h2 class="font-semibold text-xl text-gray-800 leading-tight">
+                @switch($user['id'])
+                    @case(auth()->user()->getAuthIdentifier())
+                    {{ __('My Profile') }}
+
+                    @break
+                    @default
+                    {{ __($user['name'] . ' Profile') }}
+                @endswitch
+            </h2>
+            <form method="GET" action="{{ route('profile.search') }}">
+                @method('GET')
+                @csrf
+                <div class="input-group rounded">
+                    <input type="search" class="form-control rounded" name="search" placeholder="Search for people" aria-label="Search"
+                           aria-describedby="search-addon"/>
+                    <button type="submit" class="input-group-text border-0 bg-white" id="search-addon">
+                        <i class="fas fa-search" aria-hidden="true"></i>
+                    </button>
+                </div>
+            </form>
+        </div>
     </x-slot>
     <div class="container">
         <div class="row">
@@ -18,14 +38,28 @@
                             <div class="profile-header-content">
                                 <!-- BEGIN profile-header-img -->
                                 <div class="profile-header-img">
-                                    <img src="{{ asset('/storage/' . $avatar['id'] . '/' . $avatar['file_name']) }}" alt="">
+                                    <img src="{{ asset('/storage/' . $user['folder_id'] . '/' . $user['file_name']) }}" alt="">
                                 </div>
                                 <!-- END profile-header-img -->
                                 <!-- BEGIN profile-header-info -->
                                 <div class="profile-header-info">
-                                    <h4 class="m-t-10 m-b-5">{{ auth()->user()->name }}</h4>
-                                    <p class="m-b-10">{{ auth()->user()->email }}</p>
-                                    <a href="{{ route('profile.edit', auth()->user()->id) }}" class="btn btn-sm btn-info mb-2">Edit Profile</a>
+                                    <h4 class="m-t-10 m-b-5">{{ $user['name'] }}</h4>
+                                    <p class="m-b-10">{{ $user['email'] }}</p>
+                                    @switch($user['id'])
+                                        @case(auth()->user()->getAuthIdentifier())
+                                        <a href="{{ route('profile.edit', auth()->user()->id) }}" class="btn btn-sm btn-info mb-2">Edit Profile</a>
+
+                                        @break
+                                        @default
+                                        @switch($user['following'])
+                                            @case(true)
+                                            <a href="{{ route('profile.unfollow', $user['id']) }}" class="btn btn-sm btn-info mb-2">Unfollow</a>
+
+                                            @break
+                                            @default
+                                            <a href="{{ route('profile.follow', $user['id']) }}" class="btn btn-sm btn-info mb-2">Follow</a>
+                                        @endswitch
+                                    @endswitch
                                 </div>
                                 <!-- END profile-header-info -->
                             </div>
@@ -33,9 +67,9 @@
                             <!-- BEGIN profile-header-tab -->
                             <ul class="profile-header-tab nav nav-tabs">
                                 <li class="nav-item"><a href="#profile-post" class="nav-link active show" data-toggle="tab">POSTS</a></li>
-                                <li class="nav-item"><a href="#profile-about" class="nav-link" data-toggle="tab">ABOUT</a></li>
-                                <li class="nav-item"><a href="#profile-photos" class="nav-link" data-toggle="tab">PHOTOS</a></li>
-                                <li class="nav-item"><a href="#profile-videos" class="nav-link" data-toggle="tab">VIDEOS</a></li>
+{{--                                <li class="nav-item"><a href="#profile-about" class="nav-link" data-toggle="tab">ABOUT</a></li>--}}
+{{--                                <li class="nav-item"><a href="#profile-photos" class="nav-link" data-toggle="tab">PHOTOS</a></li>--}}
+{{--                                <li class="nav-item"><a href="#profile-videos" class="nav-link" data-toggle="tab">VIDEOS</a></li>--}}
                                 <li class="nav-item"><a href="#profile-friends" class="nav-link" data-toggle="tab">FRIENDS</a></li>
                             </ul>
                             <!-- END profile-header-tab -->
@@ -50,102 +84,95 @@
                             <div class="tab-pane fade active show" id="profile-post">
                                 <!-- begin timeline -->
                                 <ul class="timeline">
-                                    <li>
-                                        <!-- begin timeline-time -->
-                                        <div class="timeline-time">
-                                            <span class="date">today</span>
-                                            <span class="time">04:20</span>
-                                        </div>
-                                        <!-- end timeline-time -->
-                                        <!-- begin timeline-icon -->
-                                        <div class="timeline-icon">
-                                            <a href="javascript:;">&nbsp;</a>
-                                        </div>
-                                        <!-- end timeline-icon -->
-                                        <!-- begin timeline-body -->
-                                        <div class="timeline-body">
-                                            <div class="timeline-header">
-                                                <span class="userimage">
-                                                    <img src="{{ asset('/storage/' . $avatar['id'] . '/' . $avatar['file_name']) }}" alt="">
+                                    @foreach($posts as $post)
+                                        <li>
+                                            <!-- begin timeline-time -->
+                                            <div class="timeline-time">
+                                                <span class="date">
+                                                   {{date('Y-m-d', strtotime($post['updated_at']))}}
                                                 </span>
-                                                <span class="username"><a href="javascript:;">{{ auth()->user()->name }}</a> <small></small></span>
-                                                <span class="pull-right text-muted">18 Views</span>
+                                                <span class="time">{{date('H:i', strtotime($post['updated_at']))}}</span>
                                             </div>
-                                            <div class="timeline-content">
-                                                <p>
-                                                    Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nunc faucibus turpis quis tincidunt luctus.
-                                                    Nam sagittis dui in nunc consequat, in imperdiet nunc sagittis.
-                                                </p>
+                                            <!-- end timeline-time -->
+                                            <!-- begin timeline-icon -->
+                                            <div class="timeline-icon">
+                                                <a href="javascript:;">&nbsp;</a>
                                             </div>
-                                            <div class="timeline-likes">
-                                                <div class="stats-right">
-                                                    <span class="stats-text">259 Shares</span>
-                                                    <span class="stats-text">21 Comments</span>
+                                            <!-- end timeline-icon -->
+                                            <!-- begin timeline-body -->
+                                            <div class="timeline-body">
+                                                <div class="timeline-header">
+                                                    <span class="userimage"><img src="{{ asset('/storage/' . $user['folder_id'] . '/' . $user['file_name']) }}" alt=""></span>
+                                                    <span class="username"><a href="{{ route( 'profile.show', $post['user_id'] ) }}">{{ $user['name'] }}</a> <small></small></span>
+
                                                 </div>
-                                                <div class="stats">
-                                                    <span class="fa-stack fa-fw stats-icon">
-                                                        <i class="fa fa-circle fa-stack-2x text-danger"></i>
-                                                        <i class="fa fa-heart fa-stack-1x fa-inverse t-plus-1"></i>
-                                                    </span>
-                                                    <span class="fa-stack fa-fw stats-icon">
-                                                        <i class="fa fa-circle fa-stack-2x text-primary"></i>
-                                                        <i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i>
-                                                    </span>
-                                                    <span class="stats-total">4.3k</span>
-                                                </div>
-                                            </div>
-                                            <div class="timeline-footer">
-                                                <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-thumbs-up fa-fw fa-lg m-r-3"></i> Like</a>
-                                                <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-comments fa-fw fa-lg m-r-3"></i> Comment</a>
-                                                <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-share fa-fw fa-lg m-r-3"></i> Share</a>
-                                            </div>
-                                            <div class="timeline-comment-box">
-                                                <div class="user">
-                                                    <img src="{{ asset('/storage/' . $avatar['id'] . '/' . $avatar['file_name']) }}">
-                                                </div>
-                                                <div class="input">
-                                                    <form action="">
-                                                        <div class="input-group">
-                                                        <input type="text" class="form-control rounded-corner" placeholder="Write a comment...">
-                                                        <span class="input-group-btn p-l-10">
-                                                            <button class="btn btn-primary f-s-12 rounded-corner" type="button">Comment</button>
-                                                        </span>
+                                                <div class="row">
+                                                    <div class="timeline-content col col-xl-6 col-lg-8 col-md-12 col-sm-12 ">
+                                                        <p class="lead">
+                                                            {{$post['post_text']}}
+                                                        </p>
+                                                        <div class="d-flex flex-column align-items-center">
+                                                            <div class="post-stars mb-2">
+                                                                @for($i = 0; $i < $post['rating']; $i++)
+                                                                    <i class="post__star fa fa-star fa-3x"></i>
+                                                                @endfor
+                                                            </div>
+                                                            <div class="card mb-2" >
+                                                                <img src="https://image.tmdb.org/t/p/w500{{ $post['movie_data']['poster_path'] }}" class="card-img-top" alt="{{ $post['movie_data']['original_title'] }}">
+                                                                <div class="card-body">
+                                                                    <h5 class="card-title h5"><strong>{{ $post['movie_data']['original_title'] }}</strong></h5>
+                                                                </div>
+                                                            </div>
+
                                                         </div>
-                                                    </form>
+
+                                                    </div>
+                                                </div>
+                                                <div class="timeline-likes">
+                                                    <div class="stats-right">
+                                                        <i class="fa fa-comments fa-fw fa-lg m-r-3"></i>
+                                                        <span class="stats-text">{{ $post['comments'] }} Comments</span>
+                                                    </div>
+                                                    <div class="stats">
+                                                        <span class="fa-stack fa-fw stats-icon">
+                                                          <i class="fa fa-circle fa-stack-2x text-primary"></i>
+                                                          <i class="fa fa-thumbs-up fa-stack-1x fa-inverse"></i>
+                                                        </span>
+                                                        <span class="stats-total">{{ $post['likes'] }}</span>
+                                                    </div>
+                                                </div>
+                                                <div class="timeline-footer">
+                                                    <a href="{{ route('posts.edit', $post['id']) }}" class="m-r-15 text-inverse-lighter">
+                                                        @if($post['liked'] === false)
+                                                            <i class="fa fa-thumbs-up fa-fw fa-lg m-r-3"></i> Like
+                                                        @elseif($post['liked'] === true)
+                                                            <i class="fa fa-thumbs-down fa-fw fa-lg m-r-3" ></i> Dislike
+                                                        @endif
+                                                    </a>
+                                                    <a href="{{ route('comments.show', $post['id']) }}" class="m-r-15 text-inverse-lighter"><i class="fa fa-comments fa-fw fa-lg m-r-3"></i> Comments</a>
+
+                                                </div>
+                                                <div class="timeline-comment-box">
+                                                    <div class="user"><a href="{{ route( 'profile.index' ) }}"></a><img src="{{ asset('/storage/' . $authUser['folder_id'] . '/' . $authUser['file_name']) }}"></div>
+                                                    <div class="input">
+                                                        <form action="{{ route('comments.store', $post['id']) }}" method="POST">
+                                                            @method('POST')
+                                                            @csrf
+                                                            <div class="input-group">
+                                                                {{--                                    <input type="text" class="form-control rounded-corner" placeholder="Write a comment...">--}}
+                                                                <textarea name="comment" class="form-control rounded-corner" rows="1" placeholder="Write a comment..."></textarea>
+                                                                <span class="input-group-btn p-l-10">
+                                                                    <button class="btn btn-primary f-s-12 rounded-corner" type="submit">Comment</button>
+                                                                </span>
+                                                            </div>
+                                                        </form>
+                                                    </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        <!-- end timeline-body -->
-                                    </li>
-                                    <li>
-                                        <!-- begin timeline-time -->
-                                        <div class="timeline-time">
-                                            <span class="date">yesterday</span>
-                                            <span class="time">20:17</span>
-                                        </div>
-                                        <!-- end timeline-time -->
-                                        <!-- begin timeline-icon -->
-                                        <div class="timeline-icon">
-                                            <a href="javascript:;">&nbsp;</a>
-                                        </div>
-                                        <!-- end timeline-icon -->
-                                        <!-- begin timeline-body -->
-                                        <div class="timeline-body">
-                                            <div class="timeline-header">
-                                                <span class="userimage"><img src="{{ asset('/storage/' . $avatar['id'] . '/' . $avatar['file_name']) }}" alt=""></span>
-                                                <span class="username">{{ auth()->user()->name }}</span>
-                                                <span class="pull-right text-muted">82 Views</span>
-                                            </div>
-                                            <div class="timeline-content">
-                                                <p>Location: United States</p>
-                                            </div>
-                                            <div class="timeline-footer">
-                                                <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-thumbs-up fa-fw fa-lg m-r-3"></i> Like</a>
-                                                <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-comments fa-fw fa-lg m-r-3"></i> Comment</a>
-                                                <a href="javascript:;" class="m-r-15 text-inverse-lighter"><i class="fa fa-share fa-fw fa-lg m-r-3"></i> Share</a>
-                                            </div>
-                                        </div>
-                                        <!-- end timeline-body -->
+                                            <!-- end timeline-body -->
+                                        </li>
+                                    @endforeach
+
                                     <li>
                                         <!-- begin timeline-icon -->
                                         <div class="timeline-icon">

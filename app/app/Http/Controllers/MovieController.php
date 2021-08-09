@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\SearchRequest;
 use App\Models\Post;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Http;
@@ -39,8 +40,6 @@ class MovieController extends Controller
                 }
             }
         }
-
-        dump($filtered);
         return view('dashboard', [
             'movies' => $filtered,
         ]);
@@ -79,9 +78,6 @@ class MovieController extends Controller
             ->get('https://api.themoviedb.org/3/movie/' . $id . '?language=en-US')
             ->json();
 
-
-
-
         $similar = Http::withToken(config('services.tmdb.token'))
             ->get('https://api.themoviedb.org/3/movie/' . $id . '/similar')
             ->json()['results'];
@@ -113,8 +109,6 @@ class MovieController extends Controller
             }
         }
 
-
-        dump($movie, $similarFiltered);
 
         return view('movie-tv', ['movie' => $movie, 'similar' => $similarFiltered]);
     }
@@ -151,5 +145,34 @@ class MovieController extends Controller
     public function destroy($id)
     {
         //
+    }
+    public function search(SearchRequest $request)
+    {
+        $response = Http::withToken(config('services.tmdb.token'))
+            ->get('https://api.themoviedb.org/3/search/movie?language=en-US&query='. $request->search .'&page=1&include_adult=false')
+            ->json()['results'];
+        $collection = collect($response);
+        $filtered = $collection->toArray();
+
+        $usersRated = Post::select('movie_id', 'rating', 'post_text', 'id')
+            ->where('user_id', auth()->user()->id)
+            ->get();
+
+        foreach ($filtered as $key => $movie) {
+            foreach ($usersRated as $rated) {
+
+                if ($movie['id'] === $rated['movie_id']) {
+                    $filtered[$key]['rating'] = $rated['rating'];
+                    $filtered[$key]['post_text'] = $rated['post_text'];
+                    $filtered[$key]['post_id'] = $rated['id'];
+
+                }
+            }
+        }
+
+        return view('dashboard', [
+            'movies' => $filtered,
+            'search' => $request->search
+        ]);
     }
 }

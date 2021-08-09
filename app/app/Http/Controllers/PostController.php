@@ -3,6 +3,8 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\PostCreateRequest;
+use App\Http\Requests\SearchRequest;
+use App\Models\Comment;
 use App\Models\Post;
 use App\Models\User;
 use Illuminate\Http\Request;
@@ -31,9 +33,14 @@ class PostController extends Controller
                 $postLikes = $post->likers()->count();
                 $posts[$key]['likes'] = $postLikes;
                 $posts[$key]['liked'] = $liked;
+
+                $postComments = Comment::where('post_id', $post->id)->get();
+                $commentCount = collect($postComments)->count();
+                $posts[$key]['comments'] = $commentCount;
             }
 
             $posts = $posts->toArray();
+
             $usersPosts = array_merge($usersPosts, $posts);
 
             $user = User::find($follower->followable_id);
@@ -55,8 +62,6 @@ class PostController extends Controller
                 ->json();
             $usersPosts[$key]['movie_data'] = $movie;
         }
-
-        dump($usersWithAvatar, $usersPosts);
 
         return view('posts', [
             'users' => $usersWithAvatar,
@@ -142,5 +147,65 @@ class PostController extends Controller
     public function destroy(Post $post)
     {
         //
+    }
+    public function search(SearchRequest $request)
+    {
+        $searchKey = $request->search;
+        $posts = Post::leftJoin('users', 'posts.user_id', '=', 'users.id')
+            ->leftJoin('comments', 'posts.id', '=', 'comments.post_id')
+            ->select(
+                'posts.id as id',
+                'posts.post_text as post_text',
+                'posts.rating as rating',
+                'posts.movie_id as movie_id',
+                'posts.updated_at',
+                'users.name as name',
+                'posts.user_id as user_id',
+                Comment::raw("count(comments.id) as comments"),
+            )
+            ->groupBy('posts.id')
+            ->orderBy('posts.updated_at', 'desc')
+            ->orWhere(
+                function ($queryName) use ($searchKey) {
+                    $queryName->where('name', 'LIKE', '%' . $searchKey . '%');
+                }
+            )->orWhere(
+                function ($queryLink) use ($searchKey) {
+                    $queryLink->where('post_text', 'LIKE', '%' . $searchKey . '%');
+                }
+            )->get();
+
+        foreach ($posts as $key => $post){
+
+            $liked = auth()->user()->hasLiked($post);
+            $postLikes = $post->likers()->count();
+            $posts[$key]['likes'] = $postLikes;
+            $posts[$key]['liked'] = $liked;
+
+            $movie = Http::withToken(config('services.tmdb.token'))
+                ->get('https://api.themoviedb.org/3/movie/' . $post->movie_id . '?language=en-US')
+                ->json();
+            $posts[$key]['movie_data'] = $movie;
+        }
+
+
+        $posts = collect($posts)->toArray();
+        $usersIdsFromPosts = collect($posts)->unique('user_id');
+        $users = [];
+        foreach ($usersIdsFromPosts as  $user){
+            $userFind = User::find($user['user_id']);
+            $userFind->getMedia();
+            $userFind = collect($userFind)->toArray();
+            $users[$user['user_id']] = $userFind;
+            $users[$user['user_id']]['folder_id'] = $userFind['media'][0]['id'];
+            $users[$user['user_id']]['file_name'] = $userFind['media'][0]['file_name'];
+
+        }
+
+        return view('posts', [
+            'users' => $users,
+            'posts' => $posts,
+            'search' => $request->search
+        ]);
     }
 }

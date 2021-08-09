@@ -4,9 +4,11 @@
             <h2 class="font-semibold text-xl text-gray-800 leading-tight">
                 {{ __($movie['original_title']) }}
             </h2>
-            <form method="GET" action="">
+            <form method="GET" action="{{ route('movies.search') }}">
+                @method('GET')
+                @csrf
                 <div class="input-group rounded">
-                    <input type="search" class="form-control rounded" placeholder="Search" aria-label="Search"
+                    <input type="text" class="form-control rounded" name="search" placeholder="Search for movies" aria-label="Search"
                            aria-describedby="search-addon"/>
                     <button type="submit" class="input-group-text border-0 bg-white" id="search-addon">
                         <i class="fas fa-search" aria-hidden="true"></i>

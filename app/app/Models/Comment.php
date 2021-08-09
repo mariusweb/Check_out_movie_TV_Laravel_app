@@ -9,4 +9,10 @@ use Overtrue\LaravelLike\Traits\Likeable;
 class Comment extends Model
 {
     use HasFactory, Likeable;
+
+    protected $fillable = [
+        'user_id',
+        'post_id',
+        'comment'
+    ];
 }
