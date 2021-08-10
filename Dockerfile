@@ -1,6 +1,7 @@
 FROM php:8.0-apache
 RUN apt-get update && apt-get upgrade -y
 RUN docker-php-ext-install pdo_mysql bcmath
+RUN apt-get -y install cron
 RUN a2enmod rewrite
 RUN pecl install xdebug
 COPY Docker/xdebug.ini /usr/local/etc/php/conf.d/docker-php-ext-xdebug.ini
@@ -15,5 +16,9 @@ RUN sed -ri -e 's!/var/www/!${APACHE_DOCUMENT_ROOT}!g' /etc/apache2/apache2.conf
 WORKDIR /var/www/html
 COPY ./app/ /var/www/html/
 RUN chown www-data:www-data -R .
+
+COPY ./crontab /etc/cron.d/crontab
+RUN chmod 0644 /etc/cron.d/crontab
+RUN crontab /etc/cron.d/crontab
 
 EXPOSE 80

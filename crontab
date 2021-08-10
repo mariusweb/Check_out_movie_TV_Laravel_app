@@ -1,0 +1,1 @@
+* * * * * docker exec -t $(docker ps -qf "name=movie_tv_app2_web_1") php artisan schedule:run >> /dev/null 2>&1

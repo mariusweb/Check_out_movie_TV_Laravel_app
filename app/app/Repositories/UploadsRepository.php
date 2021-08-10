@@ -13,15 +13,16 @@ class UploadsRepository
 
     public function deleteOldAll()
     {
-        $oldImages = TemporaryFile::where('created_at', '<', Carbon::now()->subHours(3))
+//        ->subHours(1))
+        $oldImages = TemporaryFile::where('created_at', '<', Carbon::now()->subMinute())
             ->select('folder', 'filename')
             ->get();
 
         foreach ($oldImages as $oldImage){
             $temporaryFile = TemporaryFile::where('folder', $oldImage->folder)->first();
 
-            if(Storage::exists('avatars\tmp\\' . $temporaryFile->folder)){
-                Storage::deleteDirectory('avatars\tmp\\' . $temporaryFile->folder);
+            if(Storage::exists('avatars/tmp/' . $temporaryFile->folder)){
+                Storage::deleteDirectory('avatars/tmp/' . $temporaryFile->folder);
                 $temporaryFile->delete();
             }
         }

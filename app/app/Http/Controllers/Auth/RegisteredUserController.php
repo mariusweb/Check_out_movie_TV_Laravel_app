@@ -49,12 +49,12 @@ class RegisteredUserController extends Controller
          $temporaryFile = TemporaryFile::where('folder', $request->avatar)->first();
 
          if($temporaryFile){
-             $user->addMedia(storage_path('app\avatars\tmp\\' . $request->avatar. '\\' . $temporaryFile->filename))
+             $user->addMedia(storage_path('app/avatars/tmp/' . $request->avatar. '/' . $temporaryFile->filename))
                  ->toMediaCollection('avatars');
-             rmdir(storage_path('app\avatars\tmp\\' . $request->avatar));
+             rmdir(storage_path('app/avatars/tmp/' . $request->avatar));
              $temporaryFile->delete();
          }else{
-             $user->addMedia(storage_path('app\public\default\default.png'))
+             $user->addMedia(storage_path('app/public/default/default.png'))
                  ->preservingOriginal()
                  ->toMediaCollection('avatars');
          }

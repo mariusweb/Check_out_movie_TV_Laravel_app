@@ -32,14 +32,14 @@
                     <!-- end timeline-time -->
                     <!-- begin timeline-icon -->
                     <div class="timeline-icon">
-                        <a href="javascript:;">&nbsp;</a>
+                        <a href="{{ route( 'profile.show', $user['id'] ) }}">&nbsp;</a>
                     </div>
                     <!-- end timeline-icon -->
                     <!-- begin timeline-body -->
                     <div class="timeline-body">
                         <div class="timeline-header">
                             <span class="userimage"><img src="{{ asset('/storage/' . $user['folder_id'] . '/' . $user['file_name']) }}" alt=""></span>
-                            <span class="username"><a href="javascript:;">{{ $user['name'] }}</a> <small></small></span>
+                            <span class="username"><a href="{{ route( 'profile.show', $user['id'] ) }}">{{ $user['name'] }}</a> <small></small></span>
 
                         </div>
                         <div class="row">
@@ -132,14 +132,14 @@
                             <!-- end timeline-time -->
                             <!-- begin timeline-icon -->
                             <div class="timeline-icon">
-                                <a href="javascript:;">&nbsp;</a>
+                                <a href="{{ route( 'profile.show', $comment['user_id'] ) }}">&nbsp;</a>
                             </div>
                             <!-- end timeline-icon -->
                             <!-- begin timeline-body -->
                             <div class="timeline-body">
                                 <div class="timeline-header">
                                     <span class="userimage"><img src="{{ asset('/storage/' . $comment['folder_id'] . '/' . $comment['file_name']) }}" alt=""></span>
-                                    <span class="username"><a href="javascript:;">{{ $comment['name'] }}</a> <small></small></span>
+                                    <span class="username"><a href="{{ route( 'profile.show', $comment['user_id'] ) }}">{{ $comment['name'] }}</a> <small></small></span>
 
                                 </div>
                                 <div class="row">

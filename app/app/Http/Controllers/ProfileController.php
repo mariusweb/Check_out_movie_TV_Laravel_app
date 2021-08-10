@@ -83,7 +83,7 @@ class ProfileController extends Controller
      */
     public function edit($id)
     {
-        $userAvatar = $this->profilesManager->getUsersAvatar();
+        $userAvatar = $this->profilesManager->getUserData($id);
         return view('edit-profile', ['avatar' => $userAvatar]);
     }
 

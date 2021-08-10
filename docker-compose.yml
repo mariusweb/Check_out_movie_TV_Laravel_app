@@ -31,3 +31,13 @@ services:
       MYSQL_DATABASE: csba_db
       MYSQL_USER: devuser
       MYSQL_PASSWORD: devpass
+
+  cron:
+    build:
+      context: ./
+      dockerfile: cron.dockerfile
+    container_name: cron
+    volumes:
+    - ./app:/var/www/html/
+    depends_on:
+      - web

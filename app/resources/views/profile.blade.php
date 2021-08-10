@@ -38,7 +38,7 @@
                             <div class="profile-header-content">
                                 <!-- BEGIN profile-header-img -->
                                 <div class="profile-header-img">
-                                    <img src="{{ asset('/storage/' . $user['folder_id'] . '/' . $user['file_name']) }}" alt="">
+                                    <img src="{{ asset('storage/' . $user['folder_id'] . '/' . $user['file_name']) }}" alt="{{ $user['name'] }}">
                                 </div>
                                 <!-- END profile-header-img -->
                                 <!-- BEGIN profile-header-info -->
@@ -47,7 +47,7 @@
                                     <p class="m-b-10">{{ $user['email'] }}</p>
                                     @switch($user['id'])
                                         @case(auth()->user()->getAuthIdentifier())
-                                        <a href="{{ route('profile.edit', auth()->user()->id) }}" class="btn btn-sm btn-info mb-2">Edit Profile</a>
+                                        <a href="{{ route('profile.edit', auth()->user()->getAuthIdentifier()) }}" class="btn btn-sm btn-info mb-2">Edit Profile</a>
 
                                         @break
                                         @default

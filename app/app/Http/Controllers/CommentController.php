@@ -109,10 +109,9 @@ class CommentController extends Controller
                 }
             }
 
-            $postComments = collect($postComments)->sortByDesc('updated_at')->all();
+            $postComments = collect($users)->sortByDesc('updated_at')->all();
 
         }
-        dump($post);
         return view('post-comments', [
             'post' => $post,
             'user' => $user,

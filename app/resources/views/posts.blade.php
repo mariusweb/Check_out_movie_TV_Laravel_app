@@ -39,7 +39,7 @@
                     <!-- end timeline-time -->
                     <!-- begin timeline-icon -->
                     <div class="timeline-icon">
-                        <a href="javascript:;">&nbsp;</a>
+                        <a href="{{ route('comments.show', $post['id']) }}">&nbsp;</a>
                     </div>
                     <!-- end timeline-icon -->
                     <!-- begin timeline-body -->
