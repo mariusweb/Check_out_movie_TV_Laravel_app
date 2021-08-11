@@ -17,8 +17,4 @@ WORKDIR /var/www/html
 COPY ./app/ /var/www/html/
 RUN chown www-data:www-data -R .
 
-COPY ./crontab /etc/cron.d/crontab
-RUN chmod 0644 /etc/cron.d/crontab
-RUN crontab /etc/cron.d/crontab
-
 EXPOSE 80
