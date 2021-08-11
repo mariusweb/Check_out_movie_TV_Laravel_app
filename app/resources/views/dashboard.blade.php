@@ -33,6 +33,15 @@
     <!-- Section-->
     <section class="py-5">
         <div class="container px-4 px-lg-5 mt-5">
+            @if ($errors->any())
+                <div class="alert alert-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </div>
+            @endif
             <div class="row gx-4 gx-lg-5 row-cols-1 row-cols-md-3 row-cols-xl-4 justify-content-center">
                 @foreach($movies as $movie)
                     <div class="col mb-5">
@@ -50,6 +59,7 @@
                                     <h5 class="fw-bolder">{{$movie['original_title']}}</h5>
 
                                 @if(isset($movie['rating']))
+
                                     <!-- Button trigger modal -->
                                         <button type="button" class="btn btn-primary launch-modal-{{$movie['id']}}"
                                                 data-bs-toggle="modal" data-bs-target="#exampleModal-{{$movie['id']}}">
@@ -72,17 +82,7 @@
                                                         @csrf
                                                         <div class="modal-body">
                                                             <div id="full-stars-example">
-                                                                <input
-                                                                    class="rating__input rating__input-{{$movie['id']}} rating__input--none"
-                                                                    name="rating" id="{{$movie['id']}}-rating-none"
-                                                                    value="0" type="radio"
-                                                                    @if($movie['rating'] === "0")
-                                                                    checked
-                                                                    @endif
-                                                                >
-                                                                <label aria-label="No rating" class="rating__label"
-                                                                       for="{{$movie['id']}}-rating-none"><i
-                                                                        class="rating__icon rating__icon--none fa fa-ban"></i></label>
+
 
                                                                 <label aria-label="1 star" class="rating__label"
                                                                        for="{{$movie['id']}}-rating-1"><i

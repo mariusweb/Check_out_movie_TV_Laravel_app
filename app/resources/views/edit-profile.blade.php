@@ -6,8 +6,15 @@
         </h2>
     </x-slot>
 
-    <!-- Validation Errors -->
-    <x-auth-validation-errors class="mb-4" :errors="$errors" />
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
 
     <div class="wrapper bg-white mt-sm-5">
         <h4 class="pb-4 border-bottom">Account settings</h4>

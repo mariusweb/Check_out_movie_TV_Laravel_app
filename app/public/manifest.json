@@ -1,0 +1,17 @@
+{
+    "short_name": "Movie App",
+    "name": "Movie app social media",
+    "icons": [
+        {
+            "src": "/images/path/image2.png",
+            "type": "image/png",
+            "sizes": "512x512",
+            "purpose": "any maskable"
+        }
+    ],
+    "start_url": "/index.php",
+    "background_color": "#ffffff",
+    "display": "standalone",
+    "scope": "/",
+    "theme_color": "#e5e5e5"
+}

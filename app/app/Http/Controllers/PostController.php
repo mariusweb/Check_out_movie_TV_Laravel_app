@@ -87,12 +87,15 @@ class PostController extends Controller
      */
     public function store(PostCreateRequest $request, $id)
     {
-        Post::create([
-            'user_id' => auth()->user()->id,
-            'movie_id' => $id,
-            'rating' => $request->rating,
-            'post_text' => $request->post_text
-        ]);
+
+            Post::create([
+                'user_id' => auth()->user()->id,
+                'movie_id' => $id,
+                'rating' => $request->rating,
+                'post_text' => $request->post_text
+            ]);
+
+
 
         return redirect()->route('movies.index');
     }
@@ -129,13 +132,15 @@ class PostController extends Controller
      */
     public function update(PostCreateRequest $request, Post $post)
     {
-
-        $post->rating = $request->rating;
-        $post->post_text = $request->post_text;
-        $post->save();
+        if($request->rating !== "0"){
+            $post->rating = $request->rating;
+            $post->post_text = $request->post_text;
+            $post->save();
+        }else{
+            $post::destroy();
+        }
 
         return redirect()->route('movies.index');
-
     }
 
     /**
@@ -146,7 +151,8 @@ class PostController extends Controller
      */
     public function destroy(Post $post)
     {
-        //
+        $post->delete();
+        return redirect()->route('posts.index');
     }
     public function search(SearchRequest $request)
     {

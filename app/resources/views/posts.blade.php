@@ -47,7 +47,13 @@
                         <div class="timeline-header">
                             <span class="userimage"><img src="{{ asset('/storage/' . $users[$post['user_id']]['folder_id'] . '/' . $users[$post['user_id']]['file_name']) }}" alt=""></span>
                             <span class="username"><a href="{{ route( 'profile.show', $post['user_id'] ) }}">{{ $users[$post['user_id']]['name'] }}</a> <small></small></span>
-
+                            @if($post['user_id'] === auth()->user()->getAuthIdentifier())
+                                <form method="POST" action="{{ route('posts.destroy', $post['id']) }}">
+                                    @method('DELETE')
+                                    @csrf
+                                    <button type="submit" class=" btn btn-danger">{{ __('Delete')}}</button>
+                                </form>
+                            @endif
                         </div>
                         <div class="row">
                         <div class="timeline-content col col-xl-6 col-lg-8 col-md-12 col-sm-12 ">
@@ -96,6 +102,15 @@
 
                         </div>
                         <div class="timeline-comment-box">
+                            @if ($errors->any())
+                                <div class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
                             <div class="user"><img src="{{ asset('/storage/' . $users[auth()->user()->id]['folder_id'] . '/' . $users[auth()->user()->id]['file_name']) }}"></div>
                             <div class="input">
                                 <form action="{{ route('comments.store', $post['id']) }}" method="POST">

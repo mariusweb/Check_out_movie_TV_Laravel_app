@@ -14,7 +14,7 @@ class UploadsRepository
     public function deleteOldAll()
     {
 //        ->subHours(1))
-        $oldImages = TemporaryFile::where('created_at', '<', Carbon::now()->subMinute())
+        $oldImages = TemporaryFile::where('created_at', '<', Carbon::now()->subHours(2))
             ->select('folder', 'filename')
             ->get();
 
