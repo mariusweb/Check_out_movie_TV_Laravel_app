@@ -82,7 +82,13 @@
                                                         @csrf
                                                         <div class="modal-body">
                                                             <div id="full-stars-example">
-
+                                                                <input
+                                                                    class="rating__input rating__input-{{$movie['id']}} rating__input--none"
+                                                                    name="rating" id="{{$movie['id']}}-rating-none"
+                                                                    value="0" type="radio" >
+                                                                <label aria-label="No rating" class="rating__label"
+                                                                       for="{{$movie['id']}}-rating-none"><i
+                                                                        class="rating__icon rating__icon--none fa fa-ban"></i></label>
 
                                                                 <label aria-label="1 star" class="rating__label"
                                                                        for="{{$movie['id']}}-rating-1"><i
@@ -192,13 +198,7 @@
                                                         @csrf
                                                         <div class="modal-body">
                                                             <div id="full-stars-example">
-                                                                <input
-                                                                    class="rating__input rating__input-{{$movie['id']}} rating__input--none"
-                                                                    name="rating" id="{{$movie['id']}}-rating-none"
-                                                                    value="0" type="radio" checked>
-                                                                <label aria-label="No rating" class="rating__label"
-                                                                       for="{{$movie['id']}}-rating-none"><i
-                                                                        class="rating__icon rating__icon--none fa fa-ban"></i></label>
+
                                                                 <label aria-label="1 star" class="rating__label"
                                                                        for="{{$movie['id']}}-rating-1"><i
                                                                         class="rating__icon rating__icon--star fa fa-star"></i></label>

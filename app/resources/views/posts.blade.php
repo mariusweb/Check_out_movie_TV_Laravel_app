@@ -53,6 +53,122 @@
                                     @csrf
                                     <button type="submit" class=" btn btn-danger">{{ __('Delete')}}</button>
                                 </form>
+
+                                <!-- Button trigger modal -->
+                                <button type="button" class="btn btn-primary launch-modal-{{$post['id']}}"
+                                        data-bs-toggle="modal" data-bs-target="#exampleModal-{{$post['id']}}">
+                                    Rate and Post agian
+                                </button>
+                                <div class="modal fade" id="exampleModal-{{$post['id']}}" tabindex="-1"
+                                     aria-labelledby="exampleModalLabel" aria-hidden="true">
+                                    <div class="modal-dialog">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="exampleModalLabel">Modal title</h5>
+                                                <button type="button" class="btn-close" data-bs-dismiss="modal"
+                                                        aria-label="Close"></button>
+                                            </div>
+
+                                            <form class="rating-group" id="rating-group-{{$post['id']}}"
+                                                  method="POST"
+                                                  action="{{ route('posts.update', $post['id']) }}">
+                                                @method('PUT')
+                                                @csrf
+                                                <div class="modal-body">
+                                                    <div id="full-stars-example">
+                                                        <input
+                                                            class="rating__input rating__input-{{$post['id']}} rating__input--none"
+                                                            name="rating" id="{{$post['id']}}-rating-none"
+                                                            value="0" type="radio" checked>
+                                                        <label aria-label="No rating" class="rating__label"
+                                                               for="{{$post['id']}}-rating-none"><i
+                                                                class="rating__icon rating__icon--none fa fa-ban"></i></label>
+
+                                                        <label aria-label="1 star" class="rating__label"
+                                                               for="{{$post['id']}}-rating-1"><i
+                                                                class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                        <input
+                                                            class="rating__input rating__input-{{$post['id']}}"
+                                                            name="rating" id="{{$post['id']}}-rating-1"
+                                                            value="1" type="radio"
+                                                            @if($post['rating'] === "1")
+                                                            checked
+                                                            @endif
+                                                        >
+
+                                                        <label aria-label="2 stars" class="rating__label"
+                                                               for="{{$post['id']}}-rating-2"><i
+                                                                class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                        <input
+                                                            class="rating__input rating__input-{{$post['id']}}"
+                                                            name="rating" id="{{$post['id']}}-rating-2"
+                                                            value="2" type="radio"
+                                                            @if($post['rating'] === "2")
+                                                            checked
+                                                            @endif
+                                                        >
+
+                                                        <label aria-label="3 stars" class="rating__label"
+                                                               for="{{$post['id']}}-rating-3"><i
+                                                                class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                        <input
+                                                            class="rating__input rating__input-{{$post['id']}}"
+                                                            name="rating" id="{{$post['id']}}-rating-3"
+                                                            value="3" type="radio"
+                                                            @if($post['rating'] === "3")
+                                                            checked
+                                                            @endif
+                                                        >
+
+                                                        <label aria-label="4 stars" class="rating__label"
+                                                               for="{{$post['id']}}-rating-4"><i
+                                                                class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                        <input
+                                                            class="rating__input rating__input-{{$post['id']}}"
+                                                            name="rating" id="{{$post['id']}}-rating-4"
+                                                            value="4" type="radio"
+                                                            @if($post['rating'] === "4")
+                                                            checked
+                                                            @endif
+                                                        >
+
+                                                        <label aria-label="5 stars" class="rating__label"
+                                                               for="{{$post['id']}}-rating-5"><i
+                                                                class="rating__icon rating__icon--star fa fa-star"></i></label>
+                                                        <input
+                                                            class="rating__input rating__input-{{$post['id']}}"
+                                                            name="rating" id="{{$post['id']}}-rating-5"
+                                                            value="5" type="radio"
+                                                            @if($post['rating'] === "5")
+                                                            checked
+                                                            @endif
+                                                        >
+                                                    </div>
+                                                    <div class="form-group shadow-textarea">
+                                                                <textarea class="form-control z-depth-1"
+                                                                          name="post_text"
+                                                                          id="post_text-{{$post['id']}}" rows="3"
+                                                                          placeholder="Write something here...">{{ $post['post_text'] }}</textarea>
+                                                    </div>
+                                                </div>
+                                                <div class="modal-footer">
+                                                    <button type="reset" class="btn btn-secondary"
+                                                            data-bs-dismiss="modal">Close
+                                                    </button>
+                                                    <button class="btn btn-primary submit-{{$post['id']}}">Save
+                                                        changes
+                                                    </button>
+                                                </div>
+                                            </form>
+
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="d-flex justify-content-center small text-warning mb-2 ">
+
+
+                                </div>
+
                             @endif
                         </div>
                         <div class="row">
